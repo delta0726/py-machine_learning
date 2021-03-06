@@ -7,7 +7,7 @@
 # ******************************************************************************
 
 # ＜概要＞
-#
+# - 分類と回帰の類似点を確認する
 
 
 # ＜目次＞
@@ -20,7 +20,10 @@
 
 # 0 準備 -------------------------------------------------------------------------------------------
 
+# ライブラリ
+import sklearn
 import numpy as np
+
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -30,22 +33,32 @@ from sklearn.svm import SVR
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import make_scorer
 
+
+# ライブラリ構成
+dir(sklearn.model_selection)
+dir(sklearn.svm)
+dir(sklearn.metrics)
+
+
 # データロード
 iris = datasets.load_iris()
 
 # 系列作成
-# --- ラベル0/1のみを使用
+# --- ラベル0と1のみを使用（'setosa' / 'versicolor'）
+# --- 100レコード
 x = iris.data[iris.target < 2]
 y = iris.target[iris.target < 2]
 
 # データ分割
+# --- 層別サンプリング
 x_train, x_test, y_train, y_test = train_test_split(x, y, stratify=y, random_state=7)
 
 
 # 1 分類モードの学習 -----------------------------------------------------------------------------
 
-# 学習
+# 学習器の生成
 # --- 分類器
+# --- インスタンス生成と学習を同時に実行
 svc_clf = SVC(kernel='linear').fit(x_train, y_train)
 
 # クロスバリデーション
@@ -55,8 +68,8 @@ svc_score.mean()
 
 # 2 回帰モードの学習 -----------------------------------------------------------------------------
 
-# 学習
-# --- 回帰
+# 学習器の生成
+# --- 回帰器
 svr_clf = SVR(kernel='linear').fit(x_train, y_train)
 
 
