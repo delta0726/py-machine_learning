@@ -3,8 +3,9 @@
 # Title     : 1.7 最も小さな機械学習レシピ(Recipe6)
 # Created by: Owner
 # Created on: 2020/12/20
-# Page      : P10 - P11
+# Page      : P21 - P25
 # ******************************************************************************
+
 
 # ＜概要＞
 # - 機械学習は予測を行うことを目的としている
@@ -28,6 +29,8 @@
 
 # 0 準備 -------------------------------------------------------------------------------------------
 
+# ライブラリ
+import sklearn
 
 from sklearn import datasets
 
@@ -37,7 +40,17 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
 
+# sklearnの構成確認
+dir(sklearn)
+dir(sklearn.svm)
+dir(sklearn.model_selection)
+dir(sklearn.linear_model)
+dir(sklearn.metrics)
+
+
 # データ準備
+# --- 特徴量とラベルを分離しておく
+# --- 機械学習コミュニティではこのように定義するのが慣例
 iris = datasets.load_iris()
 data = iris.data
 target = iris.target
@@ -45,10 +58,9 @@ target = iris.target
 
 # 1 データ準備 *******************************************************
 
-# データ準備
-iris = datasets.load_iris()
-data = iris.data
-target = iris.target
+# ＜ポイント＞
+# - 教師あり分類問題として扱う
+
 
 # 系列準備
 x = iris.data[:, :2]
@@ -65,7 +77,13 @@ len(x_test) / len(x)
 
 # 2 学習と予測(SVM) *******************************************************
 
+# ＜ポイント＞
+# - サポートベクターマシン(SVM)の分類器を用いて学習する
+
+
 # インスタンス作成
+# --- パラメータを初期値から変更する引数のみ設定
+# --- 引数一覧はCtrl+Pでヘルプ表示して確認
 clf_svm = SVC(kernel='linear', random_state=1)
 clf_svm
 
@@ -81,6 +99,11 @@ accuracy_score(y_test, y_pred)
 
 
 # 3 学習と予測(ロジスティック回帰) ********************************************
+
+# ＜ポイント＞
+# - ロジスティック回帰の分類器を用いて学習する
+#   --- SVMのベンチマークとして別のアルゴリズムで計算
+
 
 # インスタンスの作成
 clf_log = LogisticRegression(random_state=1)

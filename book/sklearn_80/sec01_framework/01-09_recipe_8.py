@@ -6,8 +6,9 @@
 # Page      : P30 - P31
 # ******************************************************************************
 
+
 # ＜概要＞
-#
+# - 機械学習プロセスをk近傍法で確認する
 
 
 # ＜目次＞
@@ -19,11 +20,20 @@
 
 # 0 準備 -------------------------------------------------------------------------------------------
 
+# ライブラリ
+import sklearn
 
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
+
+
+# ライブラリ構成
+dir(sklearn.model_selection)
+dir(sklearn.neighbors)
+dir(sklearn.model_selection)
+
 
 # データ準備
 iris = datasets.load_iris()
@@ -38,12 +48,14 @@ y = iris.target
 # 1 データ分割 ------------------------------------------------------------------------------------
 
 # データ分割
+# --- 層化サンプリング
 x_train, x_test, y_train, y_test = train_test_split(x, y, stratify=y, random_state=0)
 
 
 # 2 パラメータごとの予測精度 -----------------------------------------------------------------------
 
-# 学習器の作成
+# インスタンス生成
+# --- 学習器の作成
 knn_3_clf = KNeighborsClassifier(n_neighbors=3)
 knn_5_clf = KNeighborsClassifier(n_neighbors=5)
 
@@ -70,4 +82,5 @@ for n_neighbors in range(3, 9, 1):
                        cross_val_score(knn_clf, x_train, y_train, cv=10).mean()))
 
 # 確認
+# --- n_neighbors=4が最も精度が高い
 all_scores

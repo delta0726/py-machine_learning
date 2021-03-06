@@ -6,11 +6,12 @@
 # Page      : P25 - P30
 # ******************************************************************************
 
+
 # ＜概要＞
 # - irisデータセットは150個しかサンプルがないので偶然モデル精度が高まる可能性がある
-#   --- Holdout法だとモデル精度が不安定になる可能性
+#   --- Holdoutはデータ選択結果によりモデル精度が不安定になる可能性
 #   --- 交差検証を導入してデータセットを最大限活用して予測精度を測定
-#   --- モデルの予測精度の議論であり、予測自体の話ではない点に注意
+# - 交差検証は｢予測精度の評価｣が目的であり、｢予測値の出力｣自体を目的としていない
 
 
 # ＜目次＞
@@ -19,10 +20,13 @@
 # 2 学習と予測
 # 3 モデル精度の評価
 # 4 交差検証の導入
-# 5 テストデータの層別サンプリング
+# 5 層別サンプリング
 
 
 # 0 準備 -------------------------------------------------------------------------------------------
+
+# ライブラリ
+import sklearn
 
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
@@ -30,6 +34,14 @@ from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
+
+
+# ライブラリ構成
+dir(sklearn.model_selection)
+dir(sklearn.svm)
+dir(sklearn.linear_model)
+dir(sklearn.metrics)
+
 
 # データ準備
 iris = datasets.load_iris()
@@ -42,6 +54,10 @@ y = iris.target
 
 
 # 1 データ分割 ------------------------------------------------------------------
+
+# ＜ポイント＞
+# - データセットが異なることによる予測精度のバラツキを調べるため複数データを作成
+
 
 # データ分割
 # --- データ全体を訓練/テストデータに分割
@@ -64,7 +80,7 @@ len(x_test_2) / len(data)
 # 2 学習と予測 ------------------------------------------------------------------------
 
 # ＜ポイント＞
-# - データセットによってAccuracyが大きく変化することを確認
+# - 学習器の生成は｢x_train_2｣データを使用する
 
 
 # 学習器の作成
@@ -77,30 +93,43 @@ clf_lr = LogisticRegression(random_state=7)
 clf_svc.fit(x_train_2, y_train_2)
 clf_lr.fit(x_train_2, y_train_2)
 
-# 予測
-pred_svc = clf_svc.predict(x_test_2)
-pred_lr = clf_lr.predict(x_test_2)
+# 予測2
+# --- ｢データ分割-2｣のデータを使用
+# --- 学習器はx_train_2で訓練
+pred_svc_2 = clf_svc.predict(x_test_2)
+pred_lr_2 = clf_lr.predict(x_test_2)
+
+# 予測1
+# --- ｢データ分割-1｣のデータを使用
+# --- 学習器はx_train_2で訓練
+pred_svc_1 = clf_svc.predict(x_test)
+pred_lr_1 = clf_lr.predict(x_test)
 
 
 # 3 モデル精度の評価 ------------------------------------------------------------------------
 
+# ＜ポイント＞
+# - データセットによってAccuracyが大きく変化することを確認
+
+
 # モデル精度の取得
 # --- 2回目の分割
-print('Accuracy of SVC:', accuracy_score(y_test_2, pred_svc))
-print('Accuracy of LR:', accuracy_score(y_test_2, pred_lr))
+print('Accuracy of SVC:', accuracy_score(y_test_2, pred_svc_2))
+print('Accuracy of LR:', accuracy_score(y_test_2, pred_lr_2))
 
 # モデル精度の取得
 # --- 1回目の分割
-print('Accuracy of SVC:', accuracy_score(y_test, clf_svc.predict(x_test)))
-print('Accuracy of LR:', accuracy_score(y_test, clf_lr.predict(x_test)))
+print('Accuracy of SVC:', accuracy_score(y_test, pred_svc_1))
+print('Accuracy of LR:', accuracy_score(y_test, pred_lr_1))
 
 
 # 4 交差検証の導入 -------------------------------------------------------------------------
 
 # クロスバリデーションの実行
-# --- cross_val_score()はメソッドではなく関数
-scores_svc = cross_val_score(clf_svc, x_train, y_train, cv=4)
-scores_lr = cross_val_score(clf_lr, x_train, y_train, cv=4)
+# --- 訓練データ全体を用いる(x_train)
+# --- 学習器(estimator)は未学習の状態でよい
+scores_svc = cross_val_score(estimator=clf_svc, X=x_train, y=y_train, cv=4)
+scores_lr = cross_val_score(estimator=clf_lr, X=x_train, y=y_train, cv=4)
 
 
 # スコアの平均と標準偏差
@@ -114,7 +143,12 @@ print('SVC_AVG:', scores_lr.mean())
 print('SVC_STD:', scores_lr.std())
 
 
-# 5 テストデータの層別サンプリング -------------------------------------------------------------
+# 5 層別サンプリング ----------------------------------------------------------------------
+
+# ＜ポイント＞
+# - モデルの偏りを減らすため層化サンプリングを行う
+#   --- 分類問題においてラベル(y)に対して層化サンプリングを行うのはセオリー
+
 
 # データ分割
 # --- 層化サンプリング
@@ -126,5 +160,4 @@ print("SVC_AVG:", scores_svc.mean())
 print("SVC_STD:", scores_svc.std())
 
 # Accuracy
-# ---
 print("Accuracy on Final Test Set:", accuracy_score(y_test, clf_svc.predict(x_test)))
