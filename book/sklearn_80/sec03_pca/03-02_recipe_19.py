@@ -8,7 +8,8 @@
 
 
 # ＜概要＞
-# - PCAは統計学と線形代数を組み合わせることで次元削減に役立つ前処理ステップを生成する
+# - PCAは代表的な教師なし学習のアルゴリズム
+# - PCAは統計学と線形代数を組み合わせることで特徴量の次元削減に役立つ
 #   --- 元のデータ行列を表す直交する向きの集まりを見つけ出す（新しい空間に写像）
 #   --- PCAはデータの分散共分散行列を列ベクトルに変換している
 
@@ -26,7 +27,6 @@
 
 import sklearn
 import matplotlib.pyplot as plt
-
 from sklearn import datasets
 from sklearn import decomposition
 from sklearn import preprocessing
@@ -51,8 +51,12 @@ y = iris.target
 
 # 1 PCAの実行 -------------------------------------------------------------------
 
+# データセット形状
+# --- 特徴量は4つ
+iris_X.shape
+
 # インスタンス生成
-# ---PCAの引数は他のオブジェクトに比べて少なめ
+# --- PCの数を指定しない（デフォルトは元の特徴量の数）
 pca = decomposition.PCA()
 
 # インスタンスの確認
@@ -63,12 +67,17 @@ vars(pca)
 iris_pca = pca.fit_transform(iris_X)
 
 # 結果確認
-iris_pca[:5]
 vars(pca)
+iris_pca.shape
 
 # 分散の説明比率
 # --- PC1が約92.5％の分散を説明している
 pca.explained_variance_ratio_
+
+
+# ＜参考＞
+# 個別ステップで学習
+# iris_pca2 = pca.fit(iris_X).transform(iris_X)
 
 
 # 2 PCAで次元削減 ----------------------------------------------------------------
