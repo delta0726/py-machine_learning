@@ -134,6 +134,8 @@ np.mean((y_test - y_test_pred) ** 2)
 
 # MSEの計算
 # --- {sklearn}の関数を用いる
+# --- MSE_train: 19.32
+# --- MSE_test : 35.12
 mean_squared_error(y_true=y_train, y_pred=y_train_pred)
 mean_squared_error(y_true=y_test, y_pred=y_test_pred)
 
