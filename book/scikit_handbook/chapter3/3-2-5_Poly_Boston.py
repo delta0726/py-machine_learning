@@ -95,7 +95,7 @@ pprint(vars(X_train_check))
 # --- 標準化
 sc = StandardScaler()
 
-# 訓練データの標準化
+# 特徴量の標準化
 X_train_std = sc.fit_transform(X_train_pol)
 X_test_std = sc.fit_transform(X_test_pol)
 
