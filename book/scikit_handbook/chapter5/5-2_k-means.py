@@ -1,6 +1,6 @@
 # ******************************************************************************
 # Title     : Scikit-Learnデータ分析実装ハンドブック
-# Chapter   : 5 k-means
+# Chapter   : 5 クラスタリング
 # Theme     : 5-2 k-means（非階層型クラスタリング）
 # Created by: Owner
 # Created on: 2021/5/18
