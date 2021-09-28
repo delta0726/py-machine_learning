@@ -25,6 +25,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 sys.path.append("book/ml_interpret_book")
 from module.chap5.pdp import PartialDependence
+from module.chap5.ice import IndividualConditionalException
 from module.chap5.data import generate_simulation_data
 
 
@@ -72,6 +73,10 @@ pdp.plot()
 
 
 # ids_to_compute:1-20の場合 --------------------------------------
+
+# インスタンス生成
+ice = IndividualConditionalException(estimator=rf, X=X_test,
+                                     var_names=["X0", "X1", "X2"])
 
 # ICEの計算
 # --- 特徴量：X1 / インスタンス： 1
