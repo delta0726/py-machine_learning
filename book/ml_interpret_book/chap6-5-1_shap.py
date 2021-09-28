@@ -1,7 +1,7 @@
 # ******************************************************************************
 # Book Name : 機械学習を解釈する技術
-# Theme     : 5-6 実データでの分析
-# Chapter   : 予測の理由を考える
+# Theme     : 予測の理由を考える
+# Chapter   : SHAPの実装（関数によるイメージ）
 # Created on: 2021/09/27
 # Page      : P182 - P187
 # URL       : https://github.com/ghmagazine/ml_interpret_book
