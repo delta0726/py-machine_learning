@@ -35,7 +35,7 @@ from sklearn.model_selection import train_test_split
 
 # 自作モジュール
 sys.path.append("book/ml_interpret_book")
-from module.chap6.data import generate_simulation_data
+from module.chap6.data import generate_simulation_data_2
 
 
 # 1 データ準備 -----------------------------------------------------------------
@@ -94,7 +94,7 @@ shap.plots.beeswarm(shap_values=shap_values)
 # 5 SHAPによるPDP ------------------------------------------------------------
 
 # シミュレーションデータの生成
-X_train, X_test, y_train, y_test = generate_simulation_data()
+X_train, X_test, y_train, y_test = generate_simulation_data_2()
 
 # モデル構築
 rf2 = RandomForestRegressor(n_jobs=-1, random_state=42)
