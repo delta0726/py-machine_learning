@@ -31,7 +31,6 @@ import seaborn as sns
 from sklearn.ensemble import RandomForestRegressor
 
 # 自作モジュール
-sys.path.append("book/ml_interpret_book")
 from module.chap5.pdp import PartialDependence
 from module.chap5.data import generate_simulation_data
 

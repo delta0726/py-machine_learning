@@ -39,7 +39,6 @@ from sklearn.inspection import partial_dependence
 from sklearn.model_selection import train_test_split
 
 # 自作モジュール
-sys.path.append("book/ml_interpret_book")
 from module.chap4.func import plot_boston_pd
 
 

@@ -40,7 +40,6 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 
 # 自作モジュール
-sys.path.append("book/ml_interpret_book")
 from module.chap3.data import generate_simulation_data
 from module.chap3.data import plot_scatters
 from module.chap3.importance import PermutationFeatureImportance

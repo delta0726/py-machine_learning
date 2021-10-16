@@ -23,7 +23,6 @@ import sys
 
 from sklearn.ensemble import RandomForestRegressor
 
-sys.path.append("book/ml_interpret_book")
 from module.chap5.pdp import PartialDependence
 from module.chap5.ice import IndividualConditionalException
 from module.chap5.data import generate_simulation_data

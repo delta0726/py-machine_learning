@@ -28,7 +28,6 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
-sys.path.append("book/ml_interpret_book")
 from module.chap5.ice import IndividualConditionalException
 from module.chap5.data import generate_simulation_data
 from module.chap5.func import plot_scatter

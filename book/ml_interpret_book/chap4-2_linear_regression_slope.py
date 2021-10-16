@@ -36,7 +36,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 
 # 自作モジュール
-sys.path.append("book/ml_interpret_book")
 from module.chap4.func import plot_scatter
 from mli.metrics import regression_metrics
 from mli.utility import get_coef

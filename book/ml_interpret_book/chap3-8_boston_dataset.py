@@ -24,7 +24,6 @@ from sklearn.inspection import permutation_importance
 from sklearn.model_selection import train_test_split
 
 # 自作モジュール
-sys.path.append("book/ml_interpret_book")
 from module.chap3.func import plot_bar
 
 

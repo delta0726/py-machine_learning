@@ -34,7 +34,6 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 
 # 自作モジュール
-sys.path.append("book/ml_interpret_book")
 from module.chap4.data import generate_simulation_data2
 
 # シミュレーションデータの生成

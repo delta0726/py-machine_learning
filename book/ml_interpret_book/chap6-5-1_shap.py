@@ -30,7 +30,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 
 # 自作モジュール
-sys.path.append("book/ml_interpret_book")
 from mli.metrics import regression_metrics
 
 # その他の設定

@@ -34,7 +34,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
 # 自作モジュール
-sys.path.append("book/ml_interpret_book")
 from module.chap6.data import generate_simulation_data_2
 
 

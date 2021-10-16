@@ -32,7 +32,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # 自作モジュール
-sys.path.append("book/ml_interpret_book")
 from mli.visualize import get_visualization_setting
 
 # その他の設定

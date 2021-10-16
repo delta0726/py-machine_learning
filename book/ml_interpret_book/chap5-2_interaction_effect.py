@@ -28,7 +28,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 
 # 自作モジュール
-sys.path.append("book/ml_interpret_book")
 from module.chap5.func import plot_scatter
 from mli.metrics import regression_metrics
 from mli.interpret import PartialDependence

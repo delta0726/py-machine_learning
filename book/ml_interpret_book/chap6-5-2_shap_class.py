@@ -32,7 +32,6 @@ from scipy.special import factorial
 from sklearn.ensemble import RandomForestRegressor
 
 # 自作モジュール
-sys.path.append("book/ml_interpret_book")
 from module.chap6.data import generate_simulation_data
 
 # その他の設定
