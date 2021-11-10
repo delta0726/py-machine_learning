@@ -15,11 +15,13 @@
 # ＜目次＞
 # 0 準備
 # 1 データ定義
-# 2 データの標準化
-# 3 メソッドチェーンで記述した場合
+# 2 データ分割
+# 3 データの標準化
 # 4 モデル構築
 # 5 モデルによる予測
 # 6 プロット作成
+# 7 予測精度の確認
+# 8 テストデータによる検証
 
 
 # 0 準備 ----------------------------------------------------------------
@@ -66,7 +68,7 @@ else:
                          shuffle=True, random_state=99)
 
 
-# 2 データの標準化 --------------------------------------------------------
+# 3 データの標準化 --------------------------------------------------------
 
 # ＜ポイント＞
 # - 特徴量を全て標準化すると定数項がゼロとなる
@@ -82,7 +84,7 @@ autoscaled_y_train = (y_train - y_train.mean()) / y_train.std()
 autoscaled_x_train = (x_train - x_train.mean()) / x_train.std()
 
 
-# 3 モデル構築 --------------------------------------------------------------
+# 4 モデル構築 --------------------------------------------------------------
 
 # ＜ポイント＞
 # - 線形回帰モデルに標準化したデータを適用すると標準線形回帰モデルとなる
@@ -169,7 +171,8 @@ mean_absolute_error(y_true=y_train, y_pred=estimated_y_train)
 # ＜ポイント＞
 # - 訓練データで構築したモデルをテストデータで検証する
 #   --- 外部バリデーションの場合のモデル精度の評価
-
+#   --- テストデータは全体の25％である5レコードしか存在しない
+#   --- サンプル数の絶対数が少ないと信頼性が低くなる点が問題
 
 # データ標準化
 # --- 訓練データに対して基準化する点に注意
@@ -188,11 +191,12 @@ estimated_y_test = pd.DataFrame(estimated_y_test,index=x_test.index)\
 # メトリック出力
 # --- R2は0.886
 r2_score(y_true=y_test, y_pred=estimated_y_test)
-mean_squared_error(y_true=y_test, y_pred=estimated_y_test)
+mean_squared_error(y_true=y_test, y_pred=estimated_y_test, squared=False)
 mean_absolute_error(y_true=y_test, y_pred=estimated_y_test)
 
 # プロット作成
-plt.rcParams['font.size'] = 18
+# --- テストデータなので5サンプルしかない
+plt.rcParams['font.size'] = 12
 plt.scatter(y_test, estimated_y_test.iloc[:, 0], c='blue')
 y_max = max(y_test.max(), estimated_y_test.iloc[:, 0].max())
 y_min = min(y_test.min(), estimated_y_test.iloc[:, 0].min())
