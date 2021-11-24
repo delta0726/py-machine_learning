@@ -1,8 +1,8 @@
 # ******************************************************************************
 # Title     : Pythonで学ぶ実験計画法
 # Chapter   : 3 データ解析や回帰分析の手法
-# Theme     : サポートベクター回帰（線形カーネル）
-# Date      : 2021/11/24
+# Theme     : サポートベクター回帰（RBFカーネル / ガウシアンカーネル）
+# Date      : 2021/11/25
 # Page      : P60 - P67
 # ******************************************************************************
 
@@ -89,36 +89,67 @@ autoscaled_x_train = (x_train - x_train.mean()) / x_train.std()
 
 # 4 ハイパーパラメータのチューニング ----------------------------------------------
 
+# ＜ポイント＞
+# - チューニングステップは以下のとおり
+#   --- 1： 訓練データのグラム行列における全体の分散を最大になるようにγを31パターンから1つ抽出
+#   --- 2： 1で算出したγを固定してCをチューニング
+#   --- 3： 1で算出したγと2で算出したCを固定してεをチューニング
+#   --- 4： 2で算出したCとで算出したεを固定したγを再チューニング
+
 # パラメータ設定
 # --- クロスバリデーションのFold数
-# --- 線形SVR のCの候補
-# --- 線形SVRのεの候補
+# --- Cの候補
+# --- εの候補
+# --- γ の候補
 fold_number = 10
-linear_svr_cs = 2 ** np.arange(-10, 5, dtype=float)
-linear_svr_epsilons = 2 ** np.arange(-10, 0, dtype=float)
+nonlinear_svr_cs = 2 ** np.arange(-10, 5, dtype=float)
+nonlinear_svr_epsilons = 2 ** np.arange(-10, 0, dtype=float)
+nonlinear_svr_gammas = 2 ** np.arange(-20, 11, dtype=float)
+
+# γの最適化
+# --- 分散最大化によるガウシアンカーネルのγの最適化
+variance_of_gram_matrix = []
+autoscaled_x_train_array = np.array(autoscaled_x_train)
+for nonlinear_svr_gamma in nonlinear_svr_gammas:
+    gram_matrix = \
+        np.exp(- nonlinear_svr_gamma * ((autoscaled_x_train_array[:, np.newaxis] -
+                                         autoscaled_x_train_array) ** 2).sum(axis=2))
+    variance_of_gram_matrix.append(gram_matrix.var(ddof=1))
+
+optimal_nonlinear_gamma = \
+    nonlinear_svr_gammas[np.where(variance_of_gram_matrix == np.max(variance_of_gram_matrix))[0][0]]
+
 
 # クロスバリデーションの分割の設定
 cross_validation = KFold(n_splits=fold_number, random_state=9, shuffle=True)
 
-# グリッドサーチの設定
-gs_cv = GridSearchCV(SVR(kernel='linear'),
-                     {'C': linear_svr_cs, 'epsilon': linear_svr_epsilons},
+# CV による ε の最適化
+gs_cv = GridSearchCV(SVR(kernel='rbf', C=3, gamma=optimal_nonlinear_gamma),
+                     {'epsilon': nonlinear_svr_epsilons},
                      cv=cross_validation)
-
-# グリッドサーチ + クロスバリデーション実施
 gs_cv.fit(autoscaled_x_train, autoscaled_y_train)
+optimal_nonlinear_epsilon = gs_cv.best_params_['epsilon']
 
-# 最適パラメータ
-# --- C
-# --- ε
-optimal_linear_svr_c = gs_cv.best_params_['C']
-optimal_linear_svr_epsilon = gs_cv.best_params_['epsilon']
+# CV による C の最適化
+gs_cv = GridSearchCV(SVR(kernel='rbf', epsilon=optimal_nonlinear_epsilon, gamma=optimal_nonlinear_gamma),
+                     {'C': nonlinear_svr_cs},
+                     cv=cross_validation)
+gs_cv.fit(autoscaled_x_train, autoscaled_y_train)
+optimal_nonlinear_c = gs_cv.best_params_['C']
+
+# CV による γ の最適化
+gs_cv = GridSearchCV(SVR(kernel='rbf', epsilon=optimal_nonlinear_epsilon, C=optimal_nonlinear_c),
+                     {'gamma': nonlinear_svr_gammas},
+                     cv=cross_validation)
+gs_cv.fit(autoscaled_x_train, autoscaled_y_train)
+optimal_nonlinear_gamma = gs_cv.best_params_['gamma']
 
 
 # 5 モデル構築 -----------------------------------------------------------------------
 
 # インスタンス生成
-model = SVR(kernel='linear', C=optimal_linear_svr_c, epsilon=optimal_linear_svr_epsilon)
+model = SVR(kernel='rbf', C=optimal_nonlinear_c,
+            epsilon=optimal_nonlinear_epsilon, gamma=optimal_nonlinear_gamma)
 
 # モデル構築
 model.fit(X=autoscaled_x_train, y=autoscaled_y_train)
