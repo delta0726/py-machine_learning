@@ -18,6 +18,7 @@
 # 2 制約条件によるデータの精緻化
 # 3 最終データの確認
 
+
 # 0 準備 ----------------------------------------------------------------------
 
 # ライブラリ
@@ -73,6 +74,7 @@ if setting_of_generation.iloc[2, :].sum() != 0:
         deleting_sample_numbers, _ = np.where(x_generated < x_lower.values)
         x_generated = np.delete(x_generated, deleting_sample_numbers, axis=0)
 
+
 # 数値の丸め込みをする場合
 if setting_of_generation.shape[0] >= 4:
     for variable_number in range(x_generated.shape[1]):
@@ -87,3 +89,6 @@ x_generated = pd.DataFrame(x_generated, columns=setting_of_generation.columns)
 
 # データ確認
 x_generated
+
+# データ保存
+# x_generated.to_csv('csv/generated_samples.csv')
