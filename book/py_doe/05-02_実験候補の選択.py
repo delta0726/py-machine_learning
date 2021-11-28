@@ -96,5 +96,5 @@ print(round(corr, 2))
 # 保存
 # --- 選択されたサンプル
 # --- 選択されなかったサンプル
-# selected_samples.to_csv('selected_samples.csv')
-# remaining_samples.to_csv('remaining_samples.csv')
+# selected_samples.to_csv('csv/selected_samples.csv')
+# remaining_samples.to_csv('csv/remaining_samples.csv')
