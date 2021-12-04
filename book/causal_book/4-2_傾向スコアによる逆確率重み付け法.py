@@ -12,6 +12,11 @@
 # - 傾向スコアの逆数で加重することで群ごとの期待効果を求めて差分効果を算出する
 
 
+# ＜参考＞
+# 傾向スコアとIPW推定量の基本的な考え方
+# https://www.trifields.jp/basic-idea-of-propensity-score-and-ipw-estimator-by-statistical-causal-inference-2650
+
+
 # ＜目次＞
 # 0 準備
 # 1 モデル構築
