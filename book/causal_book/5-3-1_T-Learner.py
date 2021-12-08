@@ -126,4 +126,5 @@ for i in range(len(x_index)):
 
 # 正解を描画
 plt.plot(x_index, t_ans, color='black', ls='--', label='Baseline')
+plt.ylim(0.4, 1.1)
 plt.show()
