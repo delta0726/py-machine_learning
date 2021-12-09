@@ -46,19 +46,18 @@ e_z = randn(num_data)
 e_y = randn(num_data)
 
 # データの生成
-# --- YはZを含んでいる（Z⇒Yの因果関係が存在）
+# --- YはZの要素を線形に含んでいる（Z⇒Yの因果関係が存在）
 Z = e_z
 Y = 2 * Z + e_y
 
 # 相関係数
-# --- 出力値は相関があること示すが因果も内包している
+# --- correlation = 0.894
+# --- 単なる高相関か因果を内包しているかは出力値からでは判断できない
 np.corrcoef(Z, Y)
 
-# 標準化
+# 散布図をプロット
 Z_std = scipy.stats.zscore(Z)
 Y_std = scipy.stats.zscore(Y)
-
-# 散布図をプロット
 plt.scatter(Z_std, Y_std)
 plt.show()
 
@@ -85,11 +84,9 @@ Z = 2 * Y + e_z
 # --- 因果が逆であっても相関係数が大きいことがある（疑似相関）
 np.corrcoef(Z, Y)
 
-# 標準化
+# 散布図をプロット
 Z_std = scipy.stats.zscore(Z)
 Y_std = scipy.stats.zscore(Y)
-
-# 散布図をプロット
 plt.scatter(Z_std, Y_std)
 plt.show()
 
@@ -100,6 +97,7 @@ plt.show()
 # - Z⇒Yの因果はないが、YとZが交絡因子Xを持つように変更
 # - 交絡因子から間接的な因果関係が生まれて相関を持つようになる（疑似相関）
 
+
 # ノイズの生成
 num_data = 200
 e_x = randn(num_data)
@@ -107,6 +105,7 @@ e_y = randn(num_data)
 e_z = randn(num_data)
 
 # データの生成
+# --- ZとYのそれぞれが交絡変数(e_x)の影響を線形に受けている
 Z = 3.3 * e_x + e_z
 Y = 3.3 * e_x + e_y
 
@@ -114,11 +113,9 @@ Y = 3.3 * e_x + e_y
 # --- 因果は無くても相関係数は大きくなる（疑似相関）
 np.corrcoef(Z, Y)
 
-# 標準化
+# 散布図をプロット
 Z_std = scipy.stats.zscore(Z)
 Y_std = scipy.stats.zscore(Y)
-
-# 散布図をプロット
 plt.scatter(Z_std, Y_std)
 plt.show()
 
@@ -133,6 +130,10 @@ plt.show()
 
 # 4-1 選抜前のデータを生成 ------------------------------------
 
+# ＜ポイント＞
+# - 乱数データ同士で因果関係も与えていないので低相関
+
+
 # ノイズの生成
 num_data = 600
 e_x = randn(num_data)
@@ -143,16 +144,20 @@ e_y = randn(num_data)
 x = e_x
 y = e_y
 
-# 散布図をプロット
-# --- 乱数同士の相関なので低相関
-plt.scatter(x, y)
-plt.show()
-
 # 相関係数
 np.corrcoef(x, y)
 
+# 散布図をプロット
+plt.scatter(x, y)
+plt.show()
+
 
 # 4-2 合流地点での選抜 --------------------------------------
+
+# ＜ポイント＞
+# - データセットのうち一定の条件に基づいてデータを絞り込む（合流地点の設定）
+#   --- 入社希望者から内定者を絞り込むプロセスに似ている（会社にあった人材という相関を持つ）
+
 
 # 合流点を作成
 z = x + y
