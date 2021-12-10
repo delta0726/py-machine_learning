@@ -9,6 +9,7 @@
 
 # ＜概要＞
 # - T-Learnerとは介入の有無でデータセットを2つに分けて2つのモデルを構築してアプローチする
+#   --- モデルを2つ作成することで反実仮想を表現する
 
 
 # ＜目次＞
@@ -72,47 +73,59 @@ reg_1.fit(df_1[["x"]], df_1[["Y"]])
 # 3 ATEの算出 --------------------------------------------------------------------
 
 # ＜ポイント＞
+# - ATEは平均処置効果のことで集団レベルでの因果効果を指す
 # - ATEは作成した2つのモデルの予測値の差分の平均値として定義される
+#   --- 予測には全レコードを用いている点に注意
 
 
 # 予測値の算出
-# --- モデルは異なるが、データセットは全レコードを用いている点に注意
-mu_0 = reg_0.predict(df[["x"]])
-mu_1 = reg_1.predict(df[["x"]])
+# --- データセットは全レコードを用いている点に注意
+pred_0 = reg_0.predict(df[["x"]])
+pred_1 = reg_1.predict(df[["x"]])
 
 # ATEの算出
-ATE = (mu_1 - mu_0).mean()
+ATE = (pred_1 - pred_0).mean()
 print("ATE：", ATE)
 
 
 # 4 ATTとATUの算出 ---------------------------------------------------------------
 
 # ＜ポイント＞
+# - ATTとは処置群における平均処置効果、ATEとは対象群における平均処置効果
 # - それぞれの処置効果を求めるのに必要な反実仮想の結果を回帰モデルから計算
+#   --- 作成したモデルと異なる方のデータセットで予測することで反実仮想を表現
 
+
+# 予測値の算出
+pred_0_df_1 = reg_0.predict(df_1[["x"]])
+pred_1_df_0 = reg_1.predict(df_0[["x"]])
 
 # 処置群における平均処置効果（ATT）
 # --- 正解と予測値の差分
-ATT = df_1["Y"] - reg_0.predict(df_1[["x"]])
+ATT = (df_1["Y"] - pred_0_df_1).mean()
 
 # 対照群における平均処置効果（ATU）
 # --- 予測値と正解の差分
-ATU = reg_1.predict(df_0[["x"]]) - df_0["Y"]
+ATU = (pred_1_df_0 - df_0["Y"]).mean()
 
 # 確認
-print("ATT：", ATT.mean())
-print("ATU：", ATU.mean())
+print("ATT：", ATT)
+print("ATU：", ATU)
 
 
 # 5 プロット作成 -----------------------------------------------------------------
 
-# 推定された治療効果を各人ごとに求めます
-t_estimated = reg_1.predict(
-    df[["x"]]) - reg_0.predict(df[["x"]])
-plt.scatter(df[["x"]], t_estimated,
-            label="estimated_treatment-effect")
+# ＜ポイント＞
+# - 各人ごとの推定された治療効果がダミーデータの仮定を再現できているかを確認
 
-# 正解のグラフを作成
+
+# データ作成
+# --- 各人ごとの推定された治療効果（ATEとして平均する前のデータ）
+t_estimated = pred_1 - pred_0
+
+# データ作成
+# --- 正解データのイメージ（面談の満足度の閾値を示すステップデータ）
+# --- 参考: P105-107
 x_index = np.arange(-1, 1, 0.01)
 t_ans = np.zeros(len(x_index))
 for i in range(len(x_index)):
@@ -123,8 +136,9 @@ for i in range(len(x_index)):
     elif x_index[i] >= 0.5:
         t_ans[i] = 1.0
 
-
-# 正解を描画
+# プロット作成
+# --- 後の方法と比べると当てはまりはさほどよくない
+plt.scatter(df[["x"]], t_estimated, label="estimated_treatment-effect")
 plt.plot(x_index, t_ans, color='black', ls='--', label='Baseline')
 plt.ylim(0.4, 1.1)
 plt.show()
