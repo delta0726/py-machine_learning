@@ -8,7 +8,8 @@
 
 
 # ＜概要＞
-# - S-Learnerとは1つのモデルに対して介入有無を想定した2つのデータセットを用いてアプローチする
+# - S-Learnerとは1つのモデルで介入有無を想定した2つのデータセットを用いてアプローチする
+#   --- 全てのレコードを処置あり(1)又は処置なし(0)と置換することで反実仮想を表現する
 
 
 # ＜目次＞
@@ -43,6 +44,7 @@ print(df)
 
 
 # データ抽出
+# --- Z列もXに入っている点に注意
 X = df.loc[:, ["x", "Z"]]
 y = df.loc[:, ["Y"]]
 
@@ -63,6 +65,7 @@ reg.fit(X, y)
 
 # 2群のデータ作成
 # --- 全てのレコードを処置が0又は1の状態のデータを作成する
+# --- データセットを1/0で分割しているのではない点に注意
 X_0 = X.assign(Z=0)
 X_1 = X.assign(Z=1)
 
@@ -78,14 +81,17 @@ print("ATE：", ATE)
 
 # 3 プロット作成 -----------------------------------------------------------------
 
-# 推定効果の算出
+# ＜ポイント＞
+# - 各人ごとの推定された治療効果がダミーデータの仮定を再現できているかを確認
+
+
+# データ作成
 # --- 推定された治療効果を各人ごとに算出
 t_estimated = mu_1 - mu_0
 
-# 予測値をプロット
-plt.scatter(df[["x"]], t_estimated, label="estimated_treatment-effect")
-
-# 正解のグラフを作成
+# データ作成
+# --- 正解データのイメージ（面談の満足度の閾値を示すステップデータ）
+# --- 参考: P105-107
 x_index = np.arange(-1, 1, 0.01)
 t_ans = np.zeros(len(x_index))
 for i in range(len(x_index)):
@@ -97,9 +103,9 @@ for i in range(len(x_index)):
         t_ans[i] = 1.0
 
 
-# 正解を描画
+# プロット作成
+# --- T-Learnerとほぼ同じ結果
+plt.scatter(df[["x"]], t_estimated, label="estimated_treatment-effect")
 plt.plot(x_index, t_ans, color='black', ls='--', label='Baseline')
 plt.ylim(0.4, 1.1)
-
-# プロット表示
 plt.show()
