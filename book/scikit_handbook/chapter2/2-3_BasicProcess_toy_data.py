@@ -1,10 +1,10 @@
 # ******************************************************************************
-# Title     : Scikit-Learnデータ分析実装ハンドブック
-# Chapter   : 2 Scikit-Learnと開発環境
-# Theme     : 2-3 機械学習の基本的な実装
-# Created by: Owner
-# Created on: 2021/5/13
-# Page      : P46 - P49
+# Title       : Scikit-Learnデータ分析実装ハンドブック
+# Chapter     : 2 Scikit-Learnと開発環境
+# Theme       : 2-3 機械学習の基本的な実装
+# Creat Date  : 2021/5/13
+# Final Update: 2021/11/13
+# Page        : P46 - P49
 # ******************************************************************************
 
 
@@ -79,7 +79,7 @@ y_test.shape
 lr = LinearRegression()
 
 # 確認
-pprint.pprint(vars(lr))
+vars(lr)
 
 
 # 4 学習 ---------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ pprint.pprint(vars(lr))
 lr.fit(x_train, y_train)
 
 # 確認
-pprint.pprint(vars(lr))
+vars(lr)
 
 
 # 5 予測 ---------------------------------------------------------------------------------------
