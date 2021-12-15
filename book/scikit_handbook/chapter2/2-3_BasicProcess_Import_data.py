@@ -9,7 +9,7 @@
 
 
 # ＜概要＞
-# - 機械学習の基本フローの確認
+# - 機械学習の基本フローを確認する
 #   --- 外部からデータをインポート
 #   --- 決定木によるマルチクラス問題
 
@@ -33,7 +33,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
 # データロード
-npArray = np.loadtxt("book/scikit_handbook/data/in.csv", delimiter=",", dtype="float", skiprows=1)
+npArray = np.loadtxt("data/in.csv", delimiter=",", dtype="float", skiprows=1)
 
 # データ準備
 # --- x：説明変数
@@ -41,12 +41,12 @@ npArray = np.loadtxt("book/scikit_handbook/data/in.csv", delimiter=",", dtype="f
 x = npArray[:, 1:3]
 y = npArray[:, 3:4]
 
-
-# 1 訓練データと評価データの準備 ------------------------------------------------------------------
-
 # 元データの確認
 x.shape
 y.shape
+
+
+# 1 訓練データと評価データの準備 ------------------------------------------------------------------
 
 # データ分割
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3)
@@ -66,7 +66,7 @@ y_test.shape
 clf = tree.DecisionTreeClassifier()
 
 # 確認
-pprint.pprint(vars(clf))
+vars(clf)
 
 
 # 3 学習 ---------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ pprint.pprint(vars(clf))
 clf.fit(x_train, y_train)
 
 # 確認
-pprint.pprint(vars(clf))
+vars(clf)
 
 
 # 4 予測 ---------------------------------------------------------------------------------------
@@ -84,4 +84,5 @@ pprint.pprint(vars(clf))
 predict = clf.predict(X=x_test)
 
 # モデル評価
+# --- 乱数シードを固定していないので書籍と結果が異なる
 accuracy_score(y_true=y_test, y_pred=predict)
