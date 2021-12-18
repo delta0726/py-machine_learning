@@ -130,10 +130,10 @@ M_DR.fit(df_DR[["x"]], df_DR[["ITE"]])
 
 # 推定された治療効果を各人ごとに求めます
 t_estimated = M_DR.predict(df_DR[["x"]])
-plt.scatter(df_DR[["x"]], t_estimated,
-            label="estimated_treatment-effect")
 
-# 正解のグラフを作成
+# データ作成
+# --- 正解データのイメージ（面談の満足度の閾値を示すステップデータ）
+# --- 参考: P105-107
 x_index = np.arange(-1, 1, 0.01)
 t_ans = np.zeros(len(x_index))
 for i in range(len(x_index)):
@@ -144,9 +144,7 @@ for i in range(len(x_index)):
     elif x_index[i] >= 0.5:
         t_ans[i] = 1.0
 
-
-# 正解を描画
+# プロット作成
+plt.scatter(df_DR[["x"]], t_estimated, label="estimated_treatment-effect")
 plt.plot(x_index, t_ans, color='black', ls='--', label='Baseline')
-
-# プロット表示
 plt.show()
