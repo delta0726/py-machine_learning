@@ -117,6 +117,13 @@ for i in range(num):
 print(data_o)
 pd.DataFrame(data_o).groupby(0).size()
 
+# # データ保存
+# pd.concat([pd.DataFrame(features), pd.DataFrame(data_o)], axis=1)\
+#     .set_axis(['X0', 'X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9', 'X10', 'X11',
+#                'X12', 'X13', 'X14', 'X15', 'X16', 'X17', 'X18', 'X19', 'X20',
+#                'X21', 'X22', 'X23', 'Y'], axis=1)\
+#     .to_csv('csv/accomodation_data.csv')
+
 
 # 4 決定木によるモデル構築 --------------------------------------------------------
 
