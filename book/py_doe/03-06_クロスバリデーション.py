@@ -144,7 +144,7 @@ plt.show()
 # - インサンプルの予測精度の確認
 
 # メトリック出力
-## --- R2は1、MSEとMAEは0
+# --- R2は1、MSEとMAEは0
 r2_score(y_true=y, y_pred=estimated_y)
 mean_squared_error(y_true=y, y_pred=estimated_y, squared=False)
 mean_absolute_error(y_true=y, y_pred=estimated_y)
