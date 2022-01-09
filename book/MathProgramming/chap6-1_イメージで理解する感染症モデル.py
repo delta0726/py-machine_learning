@@ -103,14 +103,18 @@ for t in range(1, num):
 
 # 3 プロット作成 ----------------------------------------------------------
 
-# グラフ描画
+# 全ての系列
 plt.figure(figsize=(16, 6))
 plt.subplot(1, 2, 1)
 plt.plot(sus, label="S(susceptible)", color="orange")
 plt.plot(inf, label="I(infection)", color="blue")
 plt.plot(rec, label="R(recover)", color="green")
 plt.legend()
+
+# 新規感染者数
 plt.subplot(1, 2, 2)
 plt.plot(inf, label="I(infection)", color="blue")
 plt.legend()
+
+# プロット表示
 plt.show()
