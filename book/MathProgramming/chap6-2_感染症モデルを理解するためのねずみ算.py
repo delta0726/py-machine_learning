@@ -105,7 +105,7 @@ for t in range(1, num):
     list_plot.append([img])
 
 # アニメーションオブジェクトの作成
-# --- Jupyter NotebookにようなHTML出力機能が必要
+# --- 注意：Jupyter NotebookにようなHTML出力機能が必要
 plt.grid()
 anim = animation.ArtistAnimation(fig, list_plot, interval=200, repeat_delay=1000)
 rc('animation', html='jshtml')
