@@ -39,6 +39,7 @@ import matplotlib.pyplot as plt
 # パラメータ設定
 # --- 期間変化量
 # --- 微分係数
+# --- シミュレーション回数
 dt = 1.0
 a = 1.2
 num = 20
