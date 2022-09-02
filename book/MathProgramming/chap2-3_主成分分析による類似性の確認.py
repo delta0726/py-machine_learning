@@ -3,7 +3,7 @@
 # Chapter     : 2 機械学習を使った分析を行ってみよう
 # Theme       : 2-3 大口顧客の類似性を主成分分析によって確認しよう
 # Creat Date  : 2021/12/18
-# Final Update:
+# Final Update: 2022/09/03
 # Page        : P66 - P68
 # ******************************************************************************
 
@@ -40,12 +40,11 @@ df_info
 
 # ＜ポイント＞
 # - 利用回数上位の顧客ごとの月間利用回数を特徴量ベクトルとする
+# --- 行に顧客ID、列に日付
 
 
 # インデックスの取得
-x_0 = df_info.resample('M')\
-    .count()\
-    .drop(df_info.columns.values, axis=1)
+x_0 = df_info.resample('M').count().drop(df_info.columns.values, axis=1)
 
 # 配列の準備
 list_vector = []
@@ -58,10 +57,10 @@ num = 100
 # --- 月ごとの利用回数を特徴量として抽出
 # --- 欠損値があった場合の穴埋め
 # --- 特徴ベクトルとして追加
-i_rank = 1
+i_rank = 0
 for i_rank in range(num):
     i_id = df_info['顧客ID'].value_counts().index[i_rank]
-    x_i = df_info[df_info['顧客ID'] == i_id].resample('M').count()
+    x_i = df_info[df_info['顧客ID'] == i_id].filter(['顧客ID']).resample('M').count()
     x_i = pd.concat([x_0, x_i], axis=1).fillna(0)
     list_vector.append(x_i.iloc[:, 0].values.tolist())
 
@@ -80,23 +79,30 @@ print(features)
 #   --- データが集中している部分は類似度が高いサンプル
 
 
-# 学習器の作成
+# インスタンス生成
 pca = PCA()
+
+# 学習
 pca.fit(features)
 
 # 確認
 vars(pca)
 
 # 特徴ベクトルを主成分に変換
+# --- PCAの成分のみを出力
 transformed = pca.fit_transform(features)
+
+# 確認
+print(transformed)
+transformed.shape
 
 # 可視化
 # --- PC1とPC2を抽出
+i = 1
 for i in range(len(transformed)):
     plt.scatter(transformed[i, 0], transformed[i, 1], color="k")
     plt.text(transformed[i, 0], transformed[i, 1], str(i))
 
-# プロット表示
 plt.xlabel("PC1")
 plt.ylabel("PC2")
 plt.show()
