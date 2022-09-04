@@ -3,7 +3,7 @@
 # Chapter     : 2 機械学習を使った分析を行ってみよう
 # Theme       : 2-4 大口顧客の行動パターンを時系列によって確認
 # Creat Date  : 2021/12/19
-# Final Update:
+# Final Update: 2022/09/04
 # Page        : P69 - P71
 # ******************************************************************************
 
@@ -37,7 +37,8 @@ df_info
 
 # ＜ポイント＞
 # - 月ごとの顧客の利用回数を特徴量とする
-# - 特徴量を顧客ごとに定義する（行：日時 列：顧客ID）
+# - 利用回数が上位3人の時系列推移を確認する
+#   --- 上位ユーザーはパターンが類似していることが期待される
 
 
 # indexの抽出
@@ -51,12 +52,11 @@ list_rank = [0, 1, 2]
 # --- 指定した顧客IDの抽出
 # --- 特徴量ベクトルの作成（月次の利用回数）
 # --- 系列をプロット
+i_rank = 1
 for i_rank in list_rank:
     i_id = df_info['顧客ID'].value_counts().index[i_rank]
-    x_i = df_info.loc[lambda x: x['顧客ID'] == i_id]\
-        .resample('M').count()\
-        .filter(['顧客ID'])\
-        .fillna(0)
+    df_i = df_info.loc[lambda x: x['顧客ID'] == i_id].filter(['顧客ID'])
+    x_i = df_i.resample('M').count().fillna(0)
     plt.plot(x_i)
     plt.xticks(rotation=20)
 
@@ -76,10 +76,8 @@ plt.show()
 def plot_ts(list_rank):
     for i_rank in list_rank:
         i_id = df_info['顧客ID'].value_counts().index[i_rank]
-        x_i = df_info.loc[lambda x: x['顧客ID'] == i_id] \
-            .resample('M').count() \
-            .filter(['顧客ID']) \
-            .fillna(0)
+        df_i = df_info.loc[lambda x: x['顧客ID'] == i_id].filter(['顧客ID'])
+        x_i = df_i.resample('M').count().fillna(0)
         plt.plot(x_i)
         plt.xticks(rotation=20)
 
@@ -88,9 +86,11 @@ def plot_ts(list_rank):
 
 
 # プロット作成
+# --- 類似度が高い（周りの要素がすくないため）
 list_rank = [22, 25, 42]
 plot_ts(list_rank)
 
 # プロット作成
+# --- 類似度がそれほど高くないようだ（周りの要素が多いことが影響か？）
 list_rank = [49, 64, 70]
 plot_ts(list_rank)
