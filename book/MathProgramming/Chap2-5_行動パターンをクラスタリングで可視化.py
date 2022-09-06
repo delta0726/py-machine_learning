@@ -3,7 +3,7 @@
 # Chapter     : 2 機械学習を使った分析を行ってみよう
 # Theme       : 2-5 大口顧客同士の行動パターンの違いをクラスタリングによって可視化
 # Creat Date  : 2021/12/19
-# Final Update:
+# Final Update: 2022/09/05
 # Page        : P72 - P75
 # ******************************************************************************
 
@@ -44,9 +44,8 @@ df_info
 
 
 # インデックスの取得
-x_0 = df_info.resample('M')\
-    .count()\
-    .drop(df_info.columns.values, axis=1)
+# --- 列を全て削除
+x_0 = df_info.resample('M').count().drop(df_info.columns.values, axis=1)
 
 # パラメータ設定
 # --- 対象人数の設定
@@ -60,14 +59,14 @@ list_vector = []
 # --- 月ごとの利用回数を特徴量として抽出
 # --- 欠損値があった場合の穴埋め
 # --- 特徴ベクトルとして追加
+i_rank = 0
 for i_rank in range(num):
     i_id = df_info['顧客ID'].value_counts().index[i_rank]
-    x_i = df_info.loc[lambda x: x['顧客ID'] == i_id] \
-        .resample('M') \
-        .count() \
-        .filter(['顧客ID'])
+    df_i = df_info.loc[lambda x: x['顧客ID'] == i_id].filter(['顧客ID'])
+    x_i = df_i.resample('M').count()
     x_i = pd.concat([x_0, x_i], axis=1).fillna(0)
     list_vector.append(x_i.iloc[:, 0].values.tolist())
+
 
 # 特徴量ベクトルの変換
 features = np.array(list_vector)
