@@ -3,7 +3,7 @@
 # Chapter     : 2 機械学習を使った分析を行ってみよう
 # Theme       : 2-6 決定木によって行動の原因を推定
 # Creat Date  : 2021/12/20
-# Final Update: 2021/12/21
+# Final Update: 2022/09/07
 # Page        : P76 - P79
 # ******************************************************************************
 
@@ -47,9 +47,7 @@ df_info
 
 
 # インデックスの取得
-x_0 = df_info.resample('M')\
-    .count()\
-    .drop(df_info.columns.values, axis=1)
+x_0 = df_info.resample('M').count().drop(df_info.columns.values, axis=1)
 
 # パラメータ設定
 # --- 対象人数の設定
@@ -63,12 +61,11 @@ list_vector = []
 # --- 月ごとの利用回数を特徴量として抽出
 # --- 欠損値があった場合の穴埋め
 # --- 特徴ベクトルとして追加
+i_rank = 0
 for i_rank in range(num):
     i_id = df_info['顧客ID'].value_counts().index[i_rank]
-    x_i = df_info.loc[lambda x: x['顧客ID'] == i_id] \
-        .resample('M') \
-        .count() \
-        .filter(['顧客ID'])
+    df_i = df_info.loc[lambda x: x['顧客ID'] == i_id].filter(['顧客ID'])
+    x_i = df_i.resample('M').count()
     x_i = pd.concat([x_0, x_i], axis=1).fillna(0)
     list_vector.append(x_i.iloc[:, 0].values.tolist())
 
@@ -85,6 +82,9 @@ print(features)
 # --- クラスタの予測
 model = KMeans(n_clusters=4, random_state=0)
 model.fit(features)
+
+# モデル確認
+vars(model)
 
 # クラスタの取得
 pred_class = model.predict(features)
@@ -117,13 +117,6 @@ for i in range(num):
 print(data_o)
 pd.DataFrame(data_o).groupby(0).size()
 
-# # データ保存
-# pd.concat([pd.DataFrame(features), pd.DataFrame(data_o)], axis=1)\
-#     .set_axis(['X0', 'X1', 'X2', 'X3', 'X4', 'X5', 'X6', 'X7', 'X8', 'X9', 'X10', 'X11',
-#                'X12', 'X13', 'X14', 'X15', 'X16', 'X17', 'X18', 'X19', 'X20',
-#                'X21', 'X22', 'X23', 'Y'], axis=1)\
-#     .to_csv('csv/accomodation_data.csv')
-
 
 # 4 決定木によるモデル構築 --------------------------------------------------------
 
@@ -148,6 +141,8 @@ viz = dtreeviz(
     data_o,
     target_name='Class',
     feature_names=time_index,
-    class_names=['False','True'],
+    class_names=['False', 'True'],
 )
+
+# 出力
 viz
